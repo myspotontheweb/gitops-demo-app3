@@ -1,0 +1,49 @@
+apiVersion: skaffold/v2beta28
+kind: Config
+build:
+  artifacts:
+  - image: cartermachinerydev.azurecr.io/skaffold-example
+  local:
+    useDockerCLI: false
+    useBuildkit: false
+
+deploy:
+  helm:
+    releases:
+    - name: skaffold-example
+      chartPath: chart
+      namespace: skaffold-example
+      createNamespace: true
+      artifactOverrides:
+        image: cartermachinerydev.azurecr.io/skaffold-example
+      imageStrategy:
+        helm: {}
+      setValues:
+        replicaCount: 2
+
+portForward:
+- resourceType: service
+  resourceName: skaffold-example-gitops-demo-app3
+  namespace: skaffold-example
+  port: 80
+  localPort: 8080
+
+profiles:
+- name: ingress
+  deploy:
+    helm:
+      releases:
+      - name: skaffold-example
+        chartPath: chart
+        namespace: skaffold-example
+        createNamespace: true
+        artifactOverrides:
+          image: cartermachinerydev.azurecr.io/skaffold-example
+        imageStrategy:
+          helm: {}
+        setValues:
+          replicaCount: 2
+          ingress.enabled: true
+          ingress.ingressClassName: addon-http-application-routing
+          ingress.hosts[0].host: skaffold-example.242897b93ab8473cb812.eastus.aksapp.io
+          ingress.hosts[0].paths[0].path: "/"
