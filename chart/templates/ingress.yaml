@@ -7,13 +7,12 @@ metadata:
   name: {{ $fullName }}
   labels:
     {{- include "gitops-demo-app3.labels" . | nindent 4 }}
-  {{- with .Values.ingress.annotations }}
   annotations:
     kubernetes.io/ingress.class: {{ .Values.ingress.ingressClassName }}
+  {{- with .Values.ingress.annotations }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  ingressClassName: {{ .Values.ingress.ingressClassName }}
   {{- if .Values.ingress.tls }}
   tls:
     {{- range .Values.ingress.tls }}
