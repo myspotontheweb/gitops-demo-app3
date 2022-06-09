@@ -46,5 +46,9 @@ profiles:
           ingress.enabled: true
           ingress.ingressClassName: addon-http-application-routing
           ingress.hosts[0].paths[0].path: "/"
+          #ingress.clusterIssuer: staging-http-issuer
+          ingress.clusterIssuer: production-http-issuer
         setValueTemplates:
           ingress.hosts[0].host: "skaffold-example-{{.NAMESPACE}}.{{.CLUSTER_DNS}}"
+          ingress.tls[0].hosts[0]: "skaffold-example-{{.NAMESPACE}}.{{.CLUSTER_DNS}}"
+          ingress.tls[0].secretName: "skaffold-example-{{.NAMESPACE}}.{{.CLUSTER_DNS}}"
