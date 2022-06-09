@@ -12,7 +12,7 @@ deploy:
     releases:
     - name: skaffold-example
       chartPath: chart
-      namespace: skaffold-example
+      namespace: "{{.NAMESPACE}}"
       createNamespace: true
       artifactOverrides:
         image: skaffold-example
@@ -24,7 +24,7 @@ deploy:
 portForward:
 - resourceType: service
   resourceName: skaffold-example-gitops-demo-app3
-  namespace: skaffold-example
+  namespace: "{{.NAMESPACE}}"
   port: 80
   localPort: 8080
 
@@ -35,7 +35,7 @@ profiles:
       releases:
       - name: skaffold-example
         chartPath: chart
-        namespace: skaffold-example
+        namespace: "{{.NAMESPACE}}"
         createNamespace: true
         artifactOverrides:
           image: skaffold-example
@@ -47,4 +47,4 @@ profiles:
           ingress.ingressClassName: addon-http-application-routing
           ingress.hosts[0].paths[0].path: "/"
         setValueTemplates:
-          ingress.hosts[0].host: "skaffold-example.{{.CLUSTER_DNS}}"
+          ingress.hosts[0].host: "skaffold-example-{{.NAMESPACE}}.{{.CLUSTER_DNS}}"
